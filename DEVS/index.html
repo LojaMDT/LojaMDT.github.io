@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDT Store - Mega Optimizer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --neon-purple: #C39CFF;
+            --neon-blue: #4DEEEA;
+            --neon-pink: #F000FF;
+            --dark-bg: #0C0117;
+            --glass-bg: rgba(28, 19, 38, 0.7);
+            --text-glow: 0 0 10px rgba(195, 156, 255, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(77, 238, 234, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(240, 0, 255, 0.1) 0%, transparent 40%);
+            color: #E0D5F0;
+            font-family: 'Rajdhani', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/api/placeholder/1600/900') center/cover no-repeat;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 40px;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            box-shadow: 
+                0 4px 30px rgba(195, 156, 255, 0.15),
+                inset 0 0 5px rgba(195, 156, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(195, 156, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(195, 156, 255, 0.03) 0%, transparent 70%);
+            animation: pulse 10s infinite linear;
+            z-index: -1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 8px rgba(195, 156, 255, 0.5));
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            background: linear-gradient(120deg, var(--neon-purple), var(--neon-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: var(--text-glow);
+            position: relative;
+        }
+        
+        h1::after {
+            content: "MDT Store - Mega Optimizer";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            color: rgba(195, 156, 255, 0.1);
+            filter: blur(8px);
+        }
+        
+        .subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            color: var(--neon-blue);
+            letter-spacing: 3px;
+            font-weight: 500;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .content-section {
+            background: rgba(12, 1, 23, 0.5);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 3px solid var(--neon-purple);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .content-section:hover {
+            box-shadow: 0 0 15px rgba(195, 156, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .content-section::before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--neon-purple) 0%, transparent 70%);
+            top: -50px;
+            right: -50px;
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            color: var(--neon-purple);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: ">";
+            margin-right: 10px;
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+        
+        p {
+            font-size: 1.1em;
+            margin: 15px 0;
+            text-align: justify;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            color: var(--neon-purple);
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .highlight::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+            opacity: 0.5;
+        }
+        
+        .team-section {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(195, 156, 255, 0.3);
+        }
+        
+        .team-title {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            color: var(--neon-blue);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background: rgba(12, 1, 23, 0.7);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(195, 156, 255, 0.2);
+        }
+        
+        .team-member::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(77, 238, 234, 0.1) 0%, transparent 70%);
+            animation: pulse 4s infinite linear;
+            z-index: -1;
+        }
+        
+        .team-member:nth-child(even)::before {
+            background: radial-gradient(circle, rgba(240, 0, 255, 0.1) 0%, transparent 70%);
+            animation-delay: 2s;
+        }
+        
+        .member-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--neon-purple);
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 0 15px rgba(195, 156, 255, 0.5);
+        }
+        
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: all 0.3s ease;
+        }
+        
+        .team-member:hover .member-photo img {
+            filter: grayscale(0);
+        }
+        
+        .member-photo::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(195, 156, 255, 0.2) 0%, transparent 50%);
+            border-radius: 50%;
+        }
+        
+        .member-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            color: var(--neon-purple);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .member-role {
+            color: var(--neon-blue);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .social-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(12, 1, 23, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-purple);
+            font-size: 16px;
+            border: 1px solid var(--neon-purple);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        
+        .social-icon::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--neon-purple);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .social-icon:hover {
+            color: var(--dark-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(195, 156, 255, 0.5);
+        }
+        
+        .social-icon:hover::before {
+            opacity: 1;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(195, 156, 255, 0.3);
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .footer-item-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .footer-item-value {
+            color: var(--neon-purple);
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #A88CCC;
+            opacity: 0.7;
+        }
+        
+        .glitch-effect {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .glitch-effect::before,
+        .glitch-effect::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        
+        .glitch-effect::before {
+            color: var(--neon-pink);
+            z-index: -1;
+            animation: glitch-animation 3s infinite linear alternate-reverse;
+        }
+        
+        .glitch-effect::after {
+            color: var(--neon-blue);
+            z-index: -2;
+            animation: glitch-animation 2s infinite linear alternate-reverse;
+        }
+        
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            animation: scan 4s infinite linear;
+            opacity: 0.6;
+            z-index: 2;
+        }
+        
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+        
+        @keyframes glitch-animation {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-2px, 2px);
+            }
+            40% {
+                transform: translate(-2px, -2px);
+            }
+            60% {
+                transform: translate(2px, 2px);
+            }
+            80% {
+                transform: translate(2px, -2px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <!-- Ícones FontAwesome para redes sociais -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
+</head>
+<body>
+    <div class="scanner-line"></div>
+    
+    <div class="container">
+        <div class="header">
+            <img src="https://github.com/LojaMDT/LojaMDT.github.io/blob/main/MDTstoreX.png?raw=true" alt="MDT Store Logo" class="logo">
+            <h1 class="glitch-effect" data-text="MDT Store">MDT Store</h1>
+            <div class="subtitle">MEGA OPTIMIZER</div>
+        </div>
+        
+        <div class="content">
+            <div class="content-section">
+                <h2>Sistema de Otimização Avançado</h2>
+                <p>Assim como os nossos patches de otimização, implementados diretamente no sistema operacional Windows, agora a equipe <span class="highlight">MDT</span> traz um complemento para deixar o seu computador cada vez mais otimizado, com mais desempenho e poder de processamento, evitando ao máximo a necessidade de um upgrade de hardware. Com o nosso software de otimização, <span class="highlight">Mega Optimizer</span>, um conjunto de registros, configurações e arquivos com códigos de desbloqueio de desempenho são inseridos, configurados e atualizados automaticamente sempre que o usuário acessa o painel e clica nas otimizações contidas.</p>
+            </div>
+            
+            <div class="content-section">
+                <h2>Desempenho para Gamers e Profissionais</h2>
+                <p>Feito para quem trabalha, estuda e, principalmente, para usuários que utilizam o computador para suas jogatinas diárias, ganhe mais FPS nos seus jogos, diminua bugs, input lag, delay e também melhore a conexão da sua internet, otimizando o <span class="highlight">Ping</span> e o <span class="highlight">MS</span> durante suas jogatinas.</p>
+            </div>
+            
+            <div class="content-section">
+                <h2>Atualizações Contínuas</h2>
+                <p>O software se atualiza automaticamente sempre que alteramos suas configurações, com o intuito de melhorar e aperfeiçoar continuamente. Acompanhe nossas novidades em nossas redes sociais, disponíveis na aba <span class="highlight">"Redes"</span> no Mega Optimizer. Todos os direitos reservados | <span class="highlight">Mega Optimizer - MDT Store</span></p>
+            </div>
+        </div>
+        
+        <div class="team-section">
+            <h2 class="team-title">Nossa Equipe</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="https://github.com/LojaMDT/LojaMDT.github.io/blob/main/LogoDARK.jpeg?raw=true" alt="Ruan David">
+                    </div>
+                    <div class="member-name">Ruan David</div>
+                    <div class="member-role">Desenvolvedor & Interlace</div>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/rd7void/" class="social-icon" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://grafenotk.shop" class="social-icon" target="_blank">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="https://github.com/LojaMDT/LojaMDT.github.io/blob/main/porcoLixo.png?raw=true" alt="TioxSan">
+                    </div>
+                    <div class="member-name">TioxSan</div>
+                    <div class="member-role">Registros</div>
+                    <div class="social-icons">
+                        <a href="https://grafenotk.shop" class="social-icon" target="_blank">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="https://github.com/LojaMDT/LojaMDT.github.io/blob/main/MDTstoreX.png?raw=true" alt="MDT Team">
+                    </div>
+                    <div class="member-name">MDT Team</div>
+                    <div class="member-role">Suporte & Desenvolvimento</div>
+                    <div class="social-icons">
+                        <a href="https://lojamdt.com/" class="social-icon" target="_blank">
+                            <i class="fa fa-globe"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-item">
+                    <div class="footer-item-title">Desenvolvedor</div>
+                    <div class="footer-item-value">Ruan David</div>
+                </div>
+                
+                <div class="footer-item">
+                    <div class="footer-item-title">Registros por</div>
+                    <div class="footer-item-value">TioxSan</div>
+                </div>
+                
+                <div class="footer-item">
+                    <div class="footer-item-title">Interlace</div>
+                    <div class="footer-item-value">Ruan David</div>
+                </div>
+                
+                <div class="footer-item">
+                    <div class="footer-item-title">Loja responsável</div>
+                    <div class="footer-item-value">MDT Store</div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 MDT Store - Mega Optimizer | Todos os direitos reservados
+            </div>
+        </div>
+    </div>
+</body>
+</html>
