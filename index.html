@@ -541,6 +541,7 @@
             letter-spacing: 1px;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
         }
         
         .tab-button::before {
@@ -669,12 +670,12 @@
         </div>
         
         <div class="tab-buttons">
-            <button class="tab-button active" data-tab="home">Home</button>
-            <button class="tab-button" data-tab="team">Nossa Equipe</button>
-            <button class="tab-button" data-tab="changelog">Changelog</button>
+            <a href="https://lojamdt.github.io/?page=home" class="tab-button" data-tab="home">Home</a>
+            <a href="https://lojamdt.github.io/?page=team" class="tab-button" data-tab="team">Nossa Equipe</a>
+            <a href="https://lojamdt.github.io/?page=changelog" class="tab-button" data-tab="changelog">Changelog</a>
         </div>
         
-        <div id="home" class="tab-content active">
+        <div id="home" class="tab-content">
             <div class="content">
                 <div class="content-section">
                     <h2>Sistema de Otimização Avançado</h2>
@@ -779,75 +780,135 @@
     </div>
     
     <script>
-        // Tab Navigation
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-        
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const tabId = button.getAttribute('data-tab');
-                
-                // Remove active class from all buttons and tabs
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-                
-                // Add active class to clicked button and corresponding tab
-                button.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
-        
-        // GitHub Releases
-        // Repositório e URL da API de releases
-        const repoOwner = 'RuanDavid7';
-        const repoName = 'MDT_Changerlogger';
-        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/releases`;
-
-        // Função para interpretar Markdown básico
-        function parseMarkdown(text) {
-            // Torna os links clicáveis
-            text = makeLinksClickable(text);
-            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold**
-                .replace(/## (.*?)(\n|$)/g, '<h2>$1</h2>') // ## segundo nível de cabeçalho
-                .replace(/# (.*?)(\n|$)/g, '<span style="color: var(--bright-purple);">$1</span>$2'); // # texto
+        // Função para obter o parâmetro 'page' da URL
+        function getPageFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('page') || 'home'; // Default para 'home'
         }
 
-        // Função para tornar os links clicáveis
-        function makeLinksClickable(text) {
-            return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+        // Função para ativar a aba correta com base no parâmetro da URL
+        function activateTabFromURL() {
+            const currentPage = getPageFromURL();
+            
+            // Remove a classe 'active' de todos os botões e conteúdos
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adiciona a classe 'active' ao botão e conteúdo correspondente
+            const activeButton = document.querySelector(`.tab-button[data-tab="${currentPage}"]`);
+            const activeContent = document.getElementById(currentPage);
+            
+            if (activeButton && activeContent) {
+                activeButton.classList.add('active');
+                activeContent.classList.add('active');
+            } else {
+                // Fallback para a tab 'home' se a página não existir
+                document.querySelector('.tab-button[data-tab="home"]').classList.add('active');
+                document.getElementById('home').classList.add('active');
+            }
         }
 
-        // Obter releases da API do GitHub
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(releases => {
-                const releasesList = document.getElementById('releasesList');
-
-                // Iterar sobre as releases e adicionar à lista
-                releases.forEach(release => {
-                    const listItem = document.createElement('li');
-                    const parsedName = parseMarkdown(release.name);
-                    const parsedBody = parseMarkdown(release.body);
-
-                    listItem.innerHTML = `<h2><strong>${parsedName}</strong></h2>`;
-                    listItem.innerHTML += `<div class="description">${parsedBody}</div>`;
-                    releasesList.appendChild(listItem);
-
-                    // Adiciona um ouvinte de evento para cada item da lista
-                    listItem.addEventListener('click', () => {
-                        const descriptionElement = listItem.querySelector('.description');
-                        descriptionElement.style.display = (descriptionElement.style.display === 'none' || descriptionElement.style.display === '') ? 'block' : 'none';
-                    });
+        // Evento ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atribuindo o atributo data-tab aos botões para mantê-los funcionando com o novo sistema
+            document.querySelectorAll('.tab-button').forEach(button => {
+                const pageParam = button.href.split('page=')[1];
+                button.setAttribute('data-tab', pageParam);
+                
+                // Adicionando evento de clique aos botões
+                button.addEventListener('click', function(e) {
+                    // O comportamento de navegação já está sendo gerenciado pelo href
+                    // Mas podemos atualizar as classes active sem recarregar a página
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
                 });
-            })
-            .catch(error => {
-                console.error('Erro ao obter releases:', error);
-                const releasesList = document.getElementById('releasesList');
-                releasesList.innerHTML = `<div class="content-section">
-                    <h2>Erro ao carregar dados</h2>
-                    <p>Não foi possível conectar ao GitHub. Por favor, tente novamente mais tarde.</p>
-                </div>`;
             });
+            
+            // Ativa a tab correta com base na URL atual
+            activateTabFromURL();
+            
+            // Adiciona listener para o evento popstate (botões de navegação do navegador)
+            window.addEventListener('popstate', activateTabFromURL);
+            
+            // Dados para o changelog
+            const releases = [
+                {
+                    title: "Versão 3.0.1 - 20 de Abril, 2025",
+                    description: `**Melhorias:**
+                    - Adicionada nova interface de usuário com tema ciberpunk
+                    - Otimização de registros para Windows 11 24H2
+                    - Novo motor de desbloqueio de FPS para drivers NVIDIA série 5XX
+                    - Melhorias no sistema de otimização de memória RAM
+                    
+                    **Correções:**
+                    - Corrigido bug que causava falha ao iniciar em alguns sistemas
+                    - Resolvido problema com otimização de rede em certas placas Wi-Fi
+                    - Ajustado conflito com software de anti-cheat em jogos populares`
+                },
+                {
+                    title: "Versão 2.9.5 - 15 de Março, 2025",
+                    description: `**Melhorias:**
+                    - Adicionado suporte para placas AMD série 8000
+                    - Nova ferramenta de limpeza de cache para jogos
+                    - Melhorado sistema de otimização de latência
+                    
+                    **Correções:**
+                    - Corrigido problema com memória vazando após longos períodos de uso
+                    - Ajustada compatibilidade com últimas atualizações do Windows`
+                },
+                {
+                    title: "Versão 2.9.0 - 28 de Fevereiro, 2025",
+                    description: `**Melhorias:**
+                    - Novo painel de configurações avançadas
+                    - Adicionado suporte para processadores Intel 14ª geração
+                    - Otimizações específicas para jogos populares de 2025
+                    
+                    **Correções:**
+                    - Resolvidos problemas de compatibilidade com certos antivírus
+                    - Corrigido erro que impedia a ativação em algumas máquinas
+                    - Melhorada estabilidade geral do aplicativo`
+                }
+            ];
+            
+            // Função para renderizar os releases no changelog
+            function renderChangelog() {
+                const releasesList = document.getElementById('releasesList');
+                
+                releases.forEach(release => {
+                    const li = document.createElement('li');
+                    
+                    const h2 = document.createElement('h2');
+                    h2.textContent = release.title;
+                    h2.addEventListener('click', function() {
+                        const description = this.nextElementSibling;
+                        if (description.style.display === 'block') {
+                            description.style.display = 'none';
+                        } else {
+                            document.querySelectorAll('.description').forEach(desc => {
+                                desc.style.display = 'none';
+                            });
+                            description.style.display = 'block';
+                        }
+                    });
+                    
+                    const div = document.createElement('div');
+                    div.className = 'description';
+                    div.innerHTML = release.description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    
+                    li.appendChild(h2);
+                    li.appendChild(div);
+                    releasesList.appendChild(li);
+                });
+            }
+            
+            // Renderiza o changelog
+            renderChangelog();
+        });
     </script>
 </body>
 </html>
