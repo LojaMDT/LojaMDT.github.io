@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDT ChangerLogger Releases</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --neon-purple: #C39CFF;
+            --neon-blue: #4DEEEA;
+            --neon-pink: #F000FF;
+            --dark-bg: #0C0117;
+            --glass-bg: rgba(28, 19, 38, 0.7);
+            --text-glow: 0 0 10px rgba(195, 156, 255, 0.7);
+            --border-glow: rgba(195, 156, 255, 0.15);
+            --dark-purple: #3D004B;
+            --light-purple: #CA81FF;
+            --highlight-purple: #942FDD;
+            --deep-purple: #170025;
+            --bright-purple: #B003D6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(77, 238, 234, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(240, 0, 255, 0.1) 0%, transparent 40%);
+            color: #E0D5F0;
+            font-family: 'Rajdhani', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/api/placeholder/1600/900') center/cover no-repeat;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 40px;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            box-shadow: 
+                0 4px 30px var(--border-glow),
+                inset 0 0 5px rgba(195, 156, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(195, 156, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(195, 156, 255, 0.03) 0%, transparent 70%);
+            animation: pulse 10s infinite linear;
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            background: linear-gradient(120deg, var(--neon-purple), var(--neon-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: var(--text-glow);
+            position: relative;
+        }
+
+        h1::after {
+            content: "MDT ChangerLogger";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            color: rgba(195, 156, 255, 0.1);
+            filter: blur(8px);
+        }
+
+        .subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            color: var(--neon-blue);
+            letter-spacing: 3px;
+            font-weight: 500;
+        }
+
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            animation: scan 4s infinite linear;
+            opacity: 0.6;
+            z-index: 2;
+        }
+
+        #releasesList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #releasesList li {
+            margin-bottom: 20px;
+            border: 1px solid var(--dark-purple);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(27, 31, 35, 0.1);
+            white-space: pre-line;
+            background-color: var(--deep-purple);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #releasesList li:hover {
+            box-shadow: 0 0 15px rgba(195, 156, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        #releasesList h2 {
+            color: var(--light-purple);
+            border-bottom: 1px solid var(--dark-purple);
+            padding: 15px;
+            margin-bottom: 0;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+        }
+
+        #releasesList h2::before {
+            content: ">";
+            margin-right: 10px;
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+
+        #releasesList strong {
+            color: var(--bright-purple);
+            font-weight: bold;
+        }
+
+        .description {
+            padding: 15px;
+            display: none;
+            background: rgba(12, 1, 23, 0.3);
+            border-top: 1px solid rgba(195, 156, 255, 0.1);
+        }
+
+        .description a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .description a:hover {
+            color: var(--neon-purple);
+            text-shadow: 0 0 5px rgba(195, 156, 255, 0.5);
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(195, 156, 255, 0.3);
+            position: relative;
+            color: #A88CCC;
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="scanner-line"></div>
+        <div class="header">
+            <h1>MDT ChangerLogger</h1>
+            <div class="subtitle">RELEASE HISTORY</div>
+        </div>
+
+        <ul id="releasesList"></ul>
+
+        <div class="footer">
+            &copy; 2025 MDT ChangerLogger - All rights reserved
+        </div>
+    </div>
+
+    <script>
+        // Repositório e URL da API de releases
+        const repoOwner = 'RuanDavid7';
+        const repoName = 'MDT_Changerlogger';
+        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/releases`;
+
+        // Função para interpretar Markdown básico
+        function parseMarkdown(text) {
+            // Torna os links clicáveis
+            text = makeLinksClickable(text);
+            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold**
+                .replace(/## (.*?)(\n|$)/g, '<h2>$1</h2>') // ## segundo nível de cabeçalho
+                .replace(/# (.*?)(\n|$)/g, '<span style="color: var(--bright-purple);">$1</span>$2'); // # texto
+        }
+
+        // Função para tornar os links clicáveis
+        function makeLinksClickable(text) {
+            return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+        }
+
+        // Obter releases da API do GitHub
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(releases => {
+                const releasesList = document.getElementById('releasesList');
+
+                // Iterar sobre as releases e adicionar à lista
+                releases.forEach(release => {
+                    const listItem = document.createElement('li');
+                    const parsedName = parseMarkdown(release.name);
+                    const parsedBody = parseMarkdown(release.body);
+
+                    listItem.innerHTML = `<h2>${parsedName}</h2>`;
+                    listItem.innerHTML += `<div class="description">${parsedBody}</div>`;
+                    releasesList.appendChild(listItem);
+
+                    // Adiciona um ouvinte de evento para cada item da lista
+                    const header = listItem.querySelector('h2');
+                    header.addEventListener('click', () => {
+                        const descriptionElement = listItem.querySelector('.description');
+                        descriptionElement.style.display = (descriptionElement.style.display === 'none' || descriptionElement.style.display === '') ? 'block' : 'none';
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao obter releases:', error);
+                const releasesList = document.getElementById('releasesList');
+                releasesList.innerHTML = `<li><div class="description">Error loading releases: ${error.message}</div></li>`;
+            });
+    </script>
+</body>
+
+</html>
