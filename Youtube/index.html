@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGA OPTIMIZER - Carregando...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #13071D;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .loading-container {
+            text-align: center;
+            position: relative;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            letter-spacing: 8px;
+            margin-bottom: 50px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite, titlePulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 50px;
+            position: relative;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            background-image: url('Logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: logoFlash 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            background-size: 200% 100%;
+            animation: progressFill 3s ease-in-out, gradientMove 2s linear infinite;
+            border-radius: 2px;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: #8338ec;
+            border-radius: 50%;
+            animation: particleFloat 4s linear infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes logoFlash {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+            }
+            50% { 
+                opacity: 0.3;
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.8));
+            }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes progressFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .logo-container {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .progress-bar {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="loading-container">
+        <h1 class="title">MEGA OPTIMIZER</h1>
+        
+        <div class="logo-container">
+            <div class="logo"></div>
+        </div>
+        
+        <div class="loading-text">Carregando sistema avançado...</div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        // Criar partículas animadas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Simular progresso de carregamento
+        let progress = 0;
+        const loadingText = document.querySelector('.loading-text');
+        const messages = [
+            'Inicializando sistema...',
+            'Carregando otimizações...',
+            'Preparando interface...',
+            'Finalizando processo...',
+            'Redirecionando...'
+        ];
+
+        function updateLoadingMessage() {
+            const messageIndex = Math.floor((progress / 100) * messages.length);
+            if (messages[messageIndex]) {
+                loadingText.textContent = messages[messageIndex];
+            }
+        }
+
+        function simulateLoading() {
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        window.location.href = 'https://youtu.be/tPR5L_wCU-w?si=KGhllUjacb2ZHszr';
+                    }, 500);
+                }
+                updateLoadingMessage();
+            }, 200);
+        }
+
+        // Inicializar
+        createParticles();
+        setTimeout(simulateLoading, 1000);
+    </script>
+</body>
+</html>
